@@ -1,26 +1,60 @@
-function addPatient(){
+function login(){
+
+let u=document.getElementById("username").value;
+let p=document.getElementById("password").value;
+
+if(u=="admin" && p=="1234"){
+window.location="dashboard.html";
+}
+else{
+document.getElementById("msg").innerHTML="Invalid Login";
+}
+
+}
+
+function savePatient(){
 
 let name=document.getElementById("name").value;
 let age=document.getElementById("age").value;
 let disease=document.getElementById("disease").value;
 let doctor=document.getElementById("doctor").value;
 
-if(name=="" || age=="" || disease=="" || doctor==""){
-alert("Please fill all fields");
-return;
+let patients=JSON.parse(localStorage.getItem("patients")) || [];
+
+patients.push({name,age,disease,doctor});
+
+localStorage.setItem("patients",JSON.stringify(patients));
+
+alert("Patient Saved");
+
 }
 
-let table=document.getElementById("patientTable");
+if(document.getElementById("table")){
+
+let patients=JSON.parse(localStorage.getItem("patients")) || [];
+let table=document.getElementById("table");
+
+patients.forEach((p,i)=>{
 
 let row=table.insertRow();
 
-row.insertCell(0).innerHTML=name;
-row.insertCell(1).innerHTML=age;
-row.insertCell(2).innerHTML=disease;
-row.insertCell(3).innerHTML=doctor;
+row.insertCell(0).innerHTML=p.name;
+row.insertCell(1).innerHTML=p.age;
+row.insertCell(2).innerHTML=p.disease;
+row.insertCell(3).innerHTML=p.doctor;
 
-document.getElementById("name").value="";
-document.getElementById("age").value="";
-document.getElementById("disease").value="";
-document.getElementById("doctor").value="";
+row.insertCell(4).innerHTML=
+`<button onclick="deletePatient(${i})">Delete</button>`;
+
+});
+
+}
+
+function deletePatient(i){
+
+let patients=JSON.parse(localStorage.getItem("patients"));
+patients.splice(i,1);
+localStorage.setItem("patients",JSON.stringify(patients));
+location.reload();
+
 }
